@@ -1,2 +1,2 @@
-# AlphaFlex
-Accuracy modeling of protein multiple conformations via predicted flexible residues
+# AlphaDynmaic
+Accuracy modeling of protein multiple conformations guided by predicted residue dynamics
