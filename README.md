@@ -35,12 +35,20 @@ chex==0.0.7
 dm-haiku==0.0.12
 dm-tree==0.1.6
 docker==5.0.0
+einops
+fair-esm
 immutabledict==2.0.0
+mdtraj==1.9.9
 ml-collections==0.1.0
-numpy==1.24
-pandas==1.3.4
-scipy==1.11
-tensorflow-cpu==2.11.0/
+modelcif==0.7
+numpy==1.21.2
+pandas==1.5.3
+pytorch_lightning==2.0.4
+scipy==1.7.1
+tensorflow-cpu==2.11.0
+wandb
+torch==1.12.1+cu113 --find-links https://download.pytorch.org/whl/torch_stable.html
+openfold @ git+https://github.com/aqlaboratory/openfold.git@103d037/
 ```
 
 ### 📥 Required Models & Resources
@@ -49,21 +57,25 @@ Download and place the following models:
 AlphaFold2 parameters/
 From: https://github.com/google-deepmind/alphafold/
 → Download: params_model_1_ptm.npz/
-→ Place in: ./AlphaFlex/af_multiple_conformation/params/
+→ Place in: ./AlphaDynamic/af_multiple_conformation/params/
 
 ESM-MSA-1b model/
 From: https://github.com/facebookresearch/esm/
 → Download: esm_msa1b_t12_100M_UR50S.pt/
-→ Place in: ./AlphaFlex/flexible_residue/MSA_embedding/model/
+→ Place in: ./AlphaDynamic/movement_residue/MSA_embedding/model/
 
 TMalign executable/
 From: https://zhanggroup.org/TM-score/
 → Download: TMalign/
-→ Place in: ./AlphaFlex/scripts/
+→ Place in: ./AlphaDynamic/scripts/
+
+Colabfold_MSA
+Download UniRef30 and ColabDB according to https://github.com/sokrypton/ColabFold/blob/main/setup_databases.sh
+Matching variable： msa_database_dir
 
 ### 📂 Example Output
 ```bash
-./AlphaFlex/example/4AKE_B/
+./AlphaDynamic/example/4AKE_B/
 ```
 
 ### Running
@@ -93,9 +105,9 @@ From: https://zhanggroup.org/TM-score/
 
 #### 🚀 generate multiple conformations
 ```bash
-bash ./AlphaFlex/scripts/run.sh
+bash ./AlphaDynamic/scripts/run.sh
 ```
 
 ## 📄 License & Acknowledgement
 
-© 2025 **Intelligent Optimization and Bioinformatics Lab**, Zhejiang University of Technology
+© 2026 **Intelligent Optimization and Bioinformatics Lab**, Zhejiang University of Technology
