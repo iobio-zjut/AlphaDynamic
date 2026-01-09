@@ -71,17 +71,19 @@ From: https://zhanggroup.org/TM-score/
 ```bash
 ./AlphaFlex/scripts/config.sh
 
-| Parameter      | Description                                              |
-|----------------|----------------------------------------------------------|
-| `BASE_DIR`     | Absolute path to the root directory of the project       |
-| `pdb_dir`      | Path to the input protein structure files (PDB format)   |
-| `fasta_dir`    | Path to the input FASTA files (optional)                 |
-| `msa_out_dir`  | Directory where generated MSAs will be saved             |
-| `flagfile`     | Path to AlphaFold2 configuration flags                   |
-| `target_db`    | FoldSeek-compatible database built from AFDB             |
-| `filter_list`  | Text file containing the list of target protein names    |
-| `template_dir` | Directory containing AFDB templates                      |
-| `num_threads`  | Number of parallel processes to run                      |
+| Parameter          | Description                                              |
+|--------------------|----------------------------------------------------------|
+| `BASE_DIR`         | Absolute path to the root directory of the project       |
+| `pdb_dir`          | Path to the input protein structure files (PDB format)   |
+| `fasta_dir`        | Path to the input FASTA files (optional)                 |
+| `msa_out_dir`      | Directory where generated MSAs will be saved             |
+| `flagfile`         | Path to AlphaFold2 configuration flags                   |
+| `target_db`        | FoldSeek-compatible database built from AFDB             |
+| `filter_list`      | Text file containing the list of target protein names    |
+| `template_dir`     | Directory containing AFDB templates                      |
+| `msa_database_dir` | Msa database                                             |
+| `num_threads`      | Number of parallel processes to run                      |
+| `num_comformations`| Number of multiple conformation to predict               |
 ```
 
 #### ⚙️ Configuration Parameters (`monomer_full_dbs.flag`)
