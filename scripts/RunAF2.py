@@ -80,7 +80,6 @@ def make_processed_feature_dict(runner, a3m_file, name="test", seed=0):
     })
     return runner.process_features(feature_dict, random_seed=seed)
 
-
 def parse_results(prediction_result, processed_feature_dict):
     b_factors = prediction_result['plddt'][:, None] * prediction_result['structure_module']['final_atom_mask']
     unrelaxed_prot = protein.from_prediction(processed_feature_dict, prediction_result, b_factors=b_factors)
@@ -98,6 +97,7 @@ def write_results(result, pdb_path, pkl_path, relaxed_pdb_str=None):
 
     final_pdb_content = relaxed_pdb_str if relaxed_pdb_str else protein.to_pdb(result["unrelaxed_protein"])
     with open(pdb_path, 'w') as f: f.write(final_pdb_content)
+
     def _to_np(x): return np.array(x) if isinstance(x, jnp.ndarray) else x
 
     output_data = {k: _to_np(result['prediction_result'][k]) for k in
@@ -155,10 +155,8 @@ def main():
     print(f"[Check] {len(all_input_files) - len(input_files)} skipped. {len(input_files)} to process.")
     print(f"[Pre-scan] Sorting {len(input_files)} files by sequence length to leverage JAX cache...")
     input_files.sort(key=lambda f: get_sequence_length(f))
-
     print("[Init] Loading AlphaFold model...")
     runner = make_model_runner(f"model_{args.model_num}_ptm", args.recycles)
-
     print("[Init] Initializing Amber Relaxer (GPU)...")
     try:
         amber_relaxer = relax.AmberRelaxation(
@@ -192,8 +190,8 @@ def main():
         if last_len != -1 and seq_len != last_len:
             print(f"   -> [Cache MISS] Length changed ({last_len} -> {seq_len}). JAX will RECOMPILE.")
         last_len = seq_len
-        print(f"   -> [GPU] Predicting structure for {name} ({seq_len} aa)...")
 
+        print(f"   -> [GPU] Predicting structure for {name} ({seq_len} aa)...")
         t_total_start = time.time()
 
         prediction_result = runner.predict(features, random_seed=args.seed)
@@ -210,6 +208,7 @@ def main():
                 print(f"   -> [Relax Failed] {e}")
 
         total_duration = time.time() - t_total_start
+
         print(f"   -> [GPU] Prediction done in {total_duration:.1f}s")
 
         write_results(result, os.path.join(args.output_dir, f"{name}.pdb"),
