@@ -1,5 +1,4 @@
 #!/bin/bash
-
 source "$(dirname "$0")/config.sh"
 #----------------------*** Search MSA ***----------------------
 python scripts/search_MSA.py \
@@ -10,7 +9,7 @@ python scripts/search_MSA.py \
   --num_threads "$num_threads"
 
 #-------------------*** Structure Profile ***-------------------
-bash scripts/structure_profile1.sh \
+bash scripts/structure_profile.sh \
   --input_base_dir "$pdb_dir" \
   --target_db "$target_db" \
   --output_dir_base "$msa_out_dir/structure_profile_temp1" \
@@ -29,38 +28,47 @@ python scripts/sp.py \
   --max_workers 1
 
 #-------------------*** MSA embedding ***-------------------
-python "$BASE_DIR"/flexible_residue/MSA_embedding/run_MSA_embeddings.py \
+python "$BASE_DIR"/movement_residue/MSA_embedding/run_MSA_embeddings.py \
   --input_base_dir "$msa_out_dir" \
   --output_base_dir "$msa_out_dir"
 
-#-------------------*** Predict FlexRes ***-------------------
-python scripts/predict_FlexRes.py \
+#-------------------*** Predict MoveRes ***-------------------
+python scripts/predict_MoveRes.py \
   --input "$filter_list" \
   --output "$msa_out_dir" \
-  --model "$BASE_DIR/flexible_residue" \
+  --model "$BASE_DIR/movement_residue" \
   --msa_folder "$msa_out_dir" \
   --pdb_folder "$pdb_dir" \
   --template_folder "$msa_out_dir" \
   --process 1 \
 
-#-------------------*** MSA subsample ***-------------------
-
-python scripts/msa_sampling.py \
+#-------------------*** MSA sample ***-------------------
+python scripts/clusterMSA.py \
   --input_dir "$msa_out_dir" \
-  --npz_name flex.npz \
+  --protein_list_file "$filter_list" \
+  --scan \
+  --n_jobs -1
+
+python -m scripts.mmseqs_search_helper \
+  --base_dir "$msa_out_dir" \
+  --protein_list_file "$filter_list" \
+  --db_dir "$msa_database_dir"
+
+python scripts/msa_sample.py \
+  --base_dir "$msa_out_dir" \
+  --protein_list_file "$filter_list" \
+  --npz_name profile.npz \
   --threshold 0.3 \
   --window_size 3 \
-  --top_percent 0.20 \
-  --depths "16,32,64,128,256,512,1024,1536,2048,2560,3072,3584,4096,4608,5120"
+  --top_percent 0.2 \
+  --step_size 2 \
+  --target_total_count "$num_comformations"
 
 #-------------------*** predicted conformation ***-------------------
-
 python scripts/predict_multiple_conformations.py \
   --input_base_dir "$msa_out_dir" \
   --output_base_dir "$msa_out_dir" \
   --folders_file "$filter_list" \
   --num_threads 1 \
   --af2_dir "$BASE_DIR/af_multiple_conformation"
-
-
 
