@@ -1,4 +1,5 @@
 import os
+import re
 import shutil
 import argparse
 import subprocess
@@ -158,9 +159,9 @@ def stage2_process_subfolder(query_name, args, tmalign_binary_path, align_dir_st
 
         found_alignment_block = False
         for i in range(len(lines) - 2):
-            line1 = lines[i].strip()
-            line2 = lines[i + 1].strip()
-            line3 = lines[i + 2].strip()
+            line1 = re.sub(r'[\t\n\r\v\f]', '', lines[i])
+            line2 = re.sub(r'[\t\n\r\v\f]', '', lines[i + 1])
+            line3 = re.sub(r'[\t\n\r\v\f]', '', lines[i + 2])
 
             if (line1 and line2 and line3 and
                     len(set(line2) - {':', '.', ' '}) == 0 and
@@ -175,9 +176,9 @@ def stage2_process_subfolder(query_name, args, tmalign_binary_path, align_dir_st
                     break
 
         if not found_alignment_block:
-            # print(f"DEBUG: Failed to parse TMalign output for {query_name} vs {target_pdb_id}. "
-            #       f"Could not find a valid alignment block. Full output (truncated to first 20 lines):\n"
-            #       f"{'\\n'.join(lines[:20])}\n--- End Truncated Output ---")
+            print(f"DEBUG: Failed to parse TMalign output for {query_name} vs {target_pdb_id}. "
+                  f"Could not find a valid alignment block. Full output (truncated to first 20 lines):\n"
+                  + '\n'.join(lines[:20]) + "\n--- End Truncated Output ---")
             continue
 
         aligned_target, aligned_template = sequences
